@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
+using QuarterMile.Sounds;
+using QuarterMile.States;
 
 // MAKE SURE YOU RENAME ALL PROJECT FILES FROM DevcadeGame TO YOUR YOUR GAME NAME
 namespace QuarterMile
@@ -10,11 +12,14 @@ namespace QuarterMile
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
-		
-		/// <summary>
-		/// Stores the window dimensions in a rectangle object for easy use
-		/// </summary>
-		private Rectangle windowSize;
+        private static State _currentState;
+        private static State _nextState;
+        public static Texture2D main_menu;
+
+        /// <summary>
+        /// Stores the window dimensions in a rectangle object for easy use
+        /// </summary>
+        private Rectangle windowSize;
 		
 		/// <summary>
 		/// Game constructor
@@ -23,21 +28,32 @@ namespace QuarterMile
 		{
 			_graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-			IsMouseVisible = false;
+			IsMouseVisible = true;
 		}
 
-		/// <summary>
-		/// Performs any setup that doesn't require loaded content before the first frame.
-		/// </summary>
-		protected override void Initialize()
+        /// <summary>
+        /// Changes State
+        /// </summary>
+        /// <param name="state"></param>
+        public static void ChangeState(State state)
+        {
+            _nextState = state;
+        }
+
+        /// <summary>
+        /// Performs any setup that doesn't require loaded content before the first frame.
+        /// </summary>
+        protected override void Initialize()
 		{
 			// Sets up the input library
 			Input.Initialize();
 
-			// Set window size if running debug (in release it will be fullscreen)
-			#region
+            MenuSounds menuSounds = new();
+
+            // Set window size if running debug (in release it will be full screen)
+            #region
 #if DEBUG
-			_graphics.PreferredBackBufferWidth = 420;
+            _graphics.PreferredBackBufferWidth = 420;
 			_graphics.PreferredBackBufferHeight = 980;
 			_graphics.ApplyChanges();
 #else
@@ -61,21 +77,26 @@ namespace QuarterMile
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-			// TODO: use this.Content to load your game content here
-			// ex:
-			// texture = Content.Load<Texture2D>("fileNameWithoutExtension");
-		}
+            // TODO: use this.Content to load your game content here
+            // ex:
+            // texture = Content.Load<Texture2D>("fileNameWithoutExtension");
 
-		/// <summary>
-		/// Your main update loop. This runs once every frame, over and over.
-		/// </summary>
-		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
-		protected override void Update(GameTime gameTime)
+            // Load the MenuState
+            _currentState = new MenuState(this, _graphics.GraphicsDevice, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight, Content, "MenuState");
+
+
+        }
+
+        /// <summary>
+        /// Your main update loop. This runs once every frame, over and over.
+        /// </summary>
+        /// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
+        protected override void Update(GameTime gameTime)
 		{
 			Input.Update(); // Updates the state of the input library
 
 			// Exit when both menu buttons are pressed (or escape for keyboard debugging)
-			// You can change this but it is suggested to keep the keybind of both menu
+			// You can change this but it is suggested to keep the key bind of both menu
 			// buttons at once for a graceful exit.
 			if (Keyboard.GetState().IsKeyDown(Keys.Escape) ||
 				(Input.GetButton(1, Input.ArcadeButtons.Menu) &&
@@ -84,9 +105,18 @@ namespace QuarterMile
 				Exit();
 			}
 
-			// TODO: Add your update logic here
+            // Update the state if it is updated
+            if (_nextState != null)
+            {
+                _currentState = _nextState;
+                _nextState = null;
+            }
+            _currentState.Update(gameTime);
+            _currentState.PostUpdate(gameTime);
 
-			base.Update(gameTime);
+            // TODO: Add your update logic here
+
+            base.Update(gameTime);
 		}
 
 		/// <summary>
@@ -99,9 +129,20 @@ namespace QuarterMile
 			
 			// Batches all the draw calls for this frame, and then performs them all at once
 			_spriteBatch.Begin();
-			// TODO: Add your drawing code here
-			
-			_spriteBatch.End();
+
+            // Draw the menu items and each state
+            _currentState.Draw(gameTime, _spriteBatch, main_menu);
+
+            // Draw menu state items
+            if (_currentState._state_name.Contains("MenuState"))
+            {
+                foreach (var component in MenuState._components)
+                {
+                    component.Draw(gameTime, _spriteBatch);
+                }
+            }
+
+            _spriteBatch.End();
 
 			base.Draw(gameTime);
 		}
