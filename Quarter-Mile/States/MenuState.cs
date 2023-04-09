@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Devcade;
 using System.Linq;
+using System.Diagnostics;
+using Microsoft.Xna.Framework.Media;
 // HEAVILY MODIFIED VERSION OF Oyyou's MonoGame_Tutorials #13. All credit goes to Oyyou for the original code.
 // https://github.com/Oyyou/MonoGame_Tutorials/tree/master/MonoGame_Tutorials/Tutorial013
 
@@ -31,6 +33,7 @@ namespace QuarterMile.States
         public List<Component> _main_menu_components;
         public List<Component> _settings_components;
         public List<Component> _empty_components;
+        private readonly Song title_music;
         private readonly SoundEffect sliderUpSound;
         private readonly SoundEffect sliderDownSound;
         private readonly string musicType;
@@ -45,6 +48,7 @@ namespace QuarterMile.States
         private readonly int buttonWidth;
         private readonly int buttonHeight;
         public static bool inGame;
+        private PreGameState preGame;
 
         // MenuState Constructor
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, int PreferredBackBufferWidth, int PreferredBackBufferHeight, ContentManager content, string _state_name) :
@@ -80,34 +84,39 @@ namespace QuarterMile.States
             sliderUpSound = _content.Load<SoundEffect>("SoundEffects/SliderUp");
             sliderDownSound = _content.Load<SoundEffect>("SoundEffects/SliderDown");
 
+            // SONGS
+            title_music = _content.Load<Song>("Songs/title");
+            MediaPlayer.Play(title_music);
+            MediaPlayer.IsRepeating = true;
+
             // ***** ALL STARTING BUTTONS ARE DEFINED BELOW *****
             // These are all the things that the user can select in the menu
             // Each button has an on-click event
-            var careerGameButton = new Button(buttonTexture, buttonFont)
+            var travelButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.32f))),
-                Text = "         Travel",
+                Text = "      Travel",
             };
-            //careerGameButton.Click += CareerButton_Click;
+            travelButton.Click += TravelButton_Click;
 
             var settingsButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.39f))),
-                Text = "         Settings",
+                Text = "      Settings",
             };
             settingsButton.Click += SettingsButton_Click;
 
             var quitGameButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.46f))),
-                Text = "         Quit",
+                Text = "      Quit",
             };
             quitGameButton.Click += QuitGameButton_Click;
 
             var BackButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.46f))),
-                Text = "         Back",
+                Text = "     Back",
             };
             BackButton.Click += BackButton_Click;
 
@@ -115,7 +124,7 @@ namespace QuarterMile.States
             // MUSIC VOLUME SLIDER
             var MusicVolumeSliderButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.27f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.34f))),
                 // Setting the text to the correct place above the slider
                 textOffset = new Vector2(40, -40),
                 Text = "Music",
@@ -123,14 +132,14 @@ namespace QuarterMile.States
             MusicVolumeSliderButton.Click += MusicVolumeSliderButton_Click;
             var MusicVolumeSlider = new Slider(sliderTexture, sliderThumbTexture, musicType)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.44f)), (int)(centerY + (PreferredBackBufferHeight * 0.295f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.44f)), (int)(centerY + (PreferredBackBufferHeight * 0.365f))),
                 BarColor = Color.White,
             };
 
             // SOUND EFFECT SLIDER
             var EffectVolumeSliderButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.34f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.41f))),
                 // Setting the text to the correct place above the slider
                 textOffset = new Vector2(44, -40),
                 Text = "Sound Effects",
@@ -138,7 +147,7 @@ namespace QuarterMile.States
             EffectVolumeSliderButton.Click += EffectVolumeSliderButton_Click;
             var EffectVolumeSlider = new Slider(sliderTexture, sliderThumbTexture, soundEffectType)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.44f)), (int)(centerY + (PreferredBackBufferHeight * 0.365f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.44f)), (int)(centerY + (PreferredBackBufferHeight * 0.435f))),
                 BarColor = Color.White,
             };
 
@@ -151,7 +160,7 @@ namespace QuarterMile.States
             };
             _main_menu_components = new List<Component>()
             {
-                careerGameButton,
+                travelButton,
                 settingsButton,
                 quitGameButton,
             };
@@ -185,13 +194,23 @@ namespace QuarterMile.States
             _components = _main_menu_components;
 
             // Put the mouse in the correct spot
-            Mouse.SetPosition((int)careerGameButton.Position.X + 150, (int)careerGameButton.Position.Y + 20);
+            Mouse.SetPosition((int)travelButton.Position.X + 150, (int)travelButton.Position.Y + 20);
 
         } // MenuState Constructor
 
         // **********************************
         // ***** BUTTON ON-CLICK EVENTS *****
         // **********************************
+
+        private void TravelButton_Click(object sender, EventArgs e)
+        {
+            _components = _empty_components;
+            MediaPlayer.Stop();
+
+            // Make next game state
+            preGame = new(_game, _graphicsDevice, _preferredBackBufferWidth, _preferredBackBufferHeight, _content, "preGame");
+            Game1.ChangeState(preGame);
+        }
 
         private void SettingsButton_Click(object sender, EventArgs e)
         {
