@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using Devcade;
 using System.Linq;
-using System.Diagnostics;
 using Microsoft.Xna.Framework.Media;
 // HEAVILY MODIFIED VERSION OF Oyyou's MonoGame_Tutorials #13. All credit goes to Oyyou for the original code.
 // https://github.com/Oyyou/MonoGame_Tutorials/tree/master/MonoGame_Tutorials/Tutorial013
@@ -195,7 +194,6 @@ namespace QuarterMile.States
 
             // Put the mouse in the correct spot
             Mouse.SetPosition((int)travelButton.Position.X + 150, (int)travelButton.Position.Y + 20);
-
         } // MenuState Constructor
 
         // **********************************

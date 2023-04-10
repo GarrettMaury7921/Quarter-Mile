@@ -31,10 +31,6 @@ namespace QuarterMile.Controls
             // Draw the icon
             spriteBatch.Draw(icon, new Rectangle((int)position.X, (int)position.Y, iconWidth, iconHeight), 
                 Color.White);
-
-            // Draw the text next to the icon
-            Vector2 textPosition = new(position.X + iconWidth + 10, position.Y);
-
             spriteBatch.DrawString(font, text, position, Color.White);
         }
     }
