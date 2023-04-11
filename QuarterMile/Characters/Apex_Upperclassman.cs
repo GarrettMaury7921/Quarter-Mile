@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 
 namespace QuarterMile.Characters
 {
-    internal class NRH_Freshman
+    internal class Apex_Upperclassman
     {
 
         public static double money;
@@ -42,13 +40,12 @@ namespace QuarterMile.Characters
             return money;
         }
 
-        public NRH_Freshman() {
-
-            money = 500;
+        public Apex_Upperclassman()
+        {
+            money = 1500;
             health = 100;
-            resiliance = 0;
-            chanceToBeDepressed = 0.1;
+            resiliance = 3;
+            chanceToBeDepressed = 0.4;
         }
-
     }
 }
