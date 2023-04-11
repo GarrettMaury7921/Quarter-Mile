@@ -14,7 +14,14 @@ namespace QuarterMile.Controls
         public DialogueBox(ContentManager content)
         {
             // LOAD ASSETS
+
+            #region
+#if DEBUG
             font = content.Load<SpriteFont>("Fonts/Font_Smaller");
+#else
+			font = content.Load<SpriteFont>("Fonts/Font");
+#endif
+            #endregion
 
             // Attributes
             iconWidth = 32;

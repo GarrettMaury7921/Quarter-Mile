@@ -464,74 +464,90 @@ namespace QuarterMile.States
 
         private void CheckButtons(KeyboardState currentKeyboardState)
         {
-            if (currentKeyboardState.IsKeyDown(Keys.Z) || Input.GetButton(1, Input.ArcadeButtons.B1))
+            if (currentKeyboardState.IsKeyDown(Keys.Z) || Input.GetButtonDown(1, Input.ArcadeButtons.B1) 
+                || Input.GetButtonDown(2, Input.ArcadeButtons.B1))
             {
                 blue1down = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.Z) || Input.GetButtonUp(1, Input.ArcadeButtons.B1))
+            else if (previousKeyboardState.IsKeyDown(Keys.Z) || Input.GetButtonUp(1, Input.ArcadeButtons.B1)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.B1))
             {
                 blue1down = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.X) || Input.GetButton(1, Input.ArcadeButtons.B2))
+            if (currentKeyboardState.IsKeyDown(Keys.X) || Input.GetButtonDown(1, Input.ArcadeButtons.B2)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.B2))
             {
                 blue2down = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.X) || Input.GetButtonUp(1, Input.ArcadeButtons.B2))
+            else if (previousKeyboardState.IsKeyDown(Keys.X) || Input.GetButtonUp(1, Input.ArcadeButtons.B2)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.B2))
             {
                 blue2down = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.C) || Input.GetButton(1, Input.ArcadeButtons.B3))
+            if (currentKeyboardState.IsKeyDown(Keys.C) || Input.GetButtonDown(1, Input.ArcadeButtons.B3)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.B3))
             {
                 blue3down = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.C) || Input.GetButtonUp(1, Input.ArcadeButtons.B3))
+            else if (previousKeyboardState.IsKeyDown(Keys.C) || Input.GetButtonUp(1, Input.ArcadeButtons.B3)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.B3))
             {
                 blue3down = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.V) || Input.GetButton(1, Input.ArcadeButtons.B4))
+            if (currentKeyboardState.IsKeyDown(Keys.V) || Input.GetButtonDown(1, Input.ArcadeButtons.B4)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.B4))
             {
                 blue4down = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.V) || Input.GetButtonUp(1, Input.ArcadeButtons.B4))
+            else if (previousKeyboardState.IsKeyDown(Keys.V) || Input.GetButtonUp(1, Input.ArcadeButtons.B4)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.B4))
             {
                 blue4down = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.Q) || Input.GetButton(1, Input.ArcadeButtons.A1))
+            if (currentKeyboardState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A1)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
             {
                 reddown = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.Q) || Input.GetButtonUp(1, Input.ArcadeButtons.A1))
+            else if (previousKeyboardState.IsKeyDown(Keys.Q) || Input.GetButtonUp(1, Input.ArcadeButtons.A1)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.A1))
             {
                 reddown = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.W) || Input.GetButton(1, Input.ArcadeButtons.A2))
+            if (currentKeyboardState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A2)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A2))
             {
                 blue5down = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.W) || Input.GetButtonUp(1, Input.ArcadeButtons.A2))
+            else if (previousKeyboardState.IsKeyDown(Keys.W) || Input.GetButtonUp(1, Input.ArcadeButtons.A2)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.A2))
             {
                 blue5down = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.E) || Input.GetButton(1, Input.ArcadeButtons.A3))
+            if (currentKeyboardState.IsKeyDown(Keys.E) || Input.GetButtonDown(1, Input.ArcadeButtons.A3)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
             {
                 greendown = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.E) || Input.GetButtonUp(1, Input.ArcadeButtons.A3))
+            else if (previousKeyboardState.IsKeyDown(Keys.E) || Input.GetButtonUp(1, Input.ArcadeButtons.A3)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.A3))
             {
                 greendown = false;
             }
 
-            if (currentKeyboardState.IsKeyDown(Keys.R) || Input.GetButton(1, Input.ArcadeButtons.A4))
+            if (currentKeyboardState.IsKeyDown(Keys.R) || Input.GetButtonDown(1, Input.ArcadeButtons.A4)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A4))
             {
                 whitedown = true;
             }
-            else if (previousKeyboardState.IsKeyDown(Keys.R) || Input.GetButtonUp(1, Input.ArcadeButtons.A4))
+            else if (previousKeyboardState.IsKeyDown(Keys.R) || Input.GetButtonUp(1, Input.ArcadeButtons.A4)
+                || Input.GetButtonUp(2, Input.ArcadeButtons.A4))
             {
                 whitedown = false;
             }
@@ -539,7 +555,8 @@ namespace QuarterMile.States
 
         private void NameSelection(KeyboardState currentKeyboardState, GameTime gameTime, int charindex)
         {
-            if ((currentKeyboardState.IsKeyDown(Keys.Up) || Input.GetButton(1, Input.ArcadeButtons.StickUp))
+            if ((currentKeyboardState.IsKeyDown(Keys.Up) || Input.GetButtonDown(1, Input.ArcadeButtons.StickUp)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.StickUp))
                 && !nameInputHappened)
             {
                 if (charindex - 1 < 0)
@@ -553,7 +570,8 @@ namespace QuarterMile.States
                     nameInputTimer = NAME_INPUT_DELAY; // Start timer
                 }
             }
-            if ((currentKeyboardState.IsKeyDown(Keys.Down) || Input.GetButton(1, Input.ArcadeButtons.StickDown))
+            if ((currentKeyboardState.IsKeyDown(Keys.Down) || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.StickDown))
                 && !nameInputHappened)
             {
                 if (charindex + 1 == nameEntryMenu.chars.Length)
@@ -568,7 +586,8 @@ namespace QuarterMile.States
                 }
             }
 
-            if ((currentKeyboardState.IsKeyDown(Keys.Enter) || Input.GetButton(1, Input.ArcadeButtons.A1))
+            if ((currentKeyboardState.IsKeyDown(Keys.Enter) || Input.GetButtonDown(1, Input.ArcadeButtons.A1)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
                 && !nameInputHappened)
             {
                 // Check and see if that was the last letter

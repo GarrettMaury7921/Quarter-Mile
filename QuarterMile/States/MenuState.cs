@@ -9,6 +9,7 @@ using System;
 using Devcade;
 using System.Linq;
 using Microsoft.Xna.Framework.Media;
+using System.Diagnostics;
 // HEAVILY MODIFIED VERSION OF Oyyou's MonoGame_Tutorials #13. All credit goes to Oyyou for the original code.
 // https://github.com/Oyyou/MonoGame_Tutorials/tree/master/MonoGame_Tutorials/Tutorial013
 
@@ -279,7 +280,7 @@ namespace QuarterMile.States
             // Make keyboard state so cursor only moves once when pressed
             KeyboardState currentKeyboardState = Keyboard.GetState();
 
-            if (currentKeyboardState.GetPressedKeys().Length > 0)
+            if (currentKeyboardState.GetPressedKeys().Length > 0 || DevcadeButtonCheck())
             {
                 // Get number of elements so we can move the cursor up and down and know the limits
                 int numOfElements = _components.Count;
@@ -332,6 +333,7 @@ namespace QuarterMile.States
 
                     keyPressed = true;
                 }
+
                 if ((currentKeyboardState.IsKeyDown(Keys.Down) || Input.GetButton(1, Input.ArcadeButtons.StickDown)
                     || Input.GetButton(2, Input.ArcadeButtons.StickDown)) && !keyPressed && currentButton < numOfElements)
                 {
@@ -483,6 +485,26 @@ namespace QuarterMile.States
             }
 
         } // Do Menu Controls
+
+        public static bool DevcadeButtonCheck()
+        {
+            if (Input.GetButtonDown(1, Input.ArcadeButtons.StickUp) || Input.GetButtonDown(2, Input.ArcadeButtons.StickUp) 
+                || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown) || Input.GetButtonDown(2, Input.ArcadeButtons.StickDown) ||
+                Input.GetButtonDown(1, Input.ArcadeButtons.A1) || Input.GetButtonDown(1, Input.ArcadeButtons.A2)
+                || Input.GetButtonDown(1, Input.ArcadeButtons.A3) || Input.GetButtonDown(1, Input.ArcadeButtons.A4)
+                || Input.GetButtonDown(1, Input.ArcadeButtons.B1) || Input.GetButtonDown(1, Input.ArcadeButtons.B2)
+                || Input.GetButtonDown(1, Input.ArcadeButtons.B3) || Input.GetButtonDown(1, Input.ArcadeButtons.B4)
+                || Input.GetButtonDown(1, Input.ArcadeButtons.Menu) || Input.GetButtonDown(2, Input.ArcadeButtons.A1)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A2)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.A3) || Input.GetButtonDown(2, Input.ArcadeButtons.A4)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.B1) || Input.GetButtonDown(2, Input.ArcadeButtons.B2)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.B3) || Input.GetButtonDown(2, Input.ArcadeButtons.B4)
+                || Input.GetButtonDown(2, Input.ArcadeButtons.Menu))
+            {
+                return true;
+            }
+            return false;
+        }
 
     } // Public class MenuState end
 
