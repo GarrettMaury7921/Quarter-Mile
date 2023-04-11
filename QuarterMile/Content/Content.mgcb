@@ -251,6 +251,12 @@
 /processorParam:Quality=Best
 /build:Songs/title.wav
 
+#begin Songs/willamette_valley.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Songs/willamette_valley.wav
+
 #begin SoundEffects/SliderDown.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

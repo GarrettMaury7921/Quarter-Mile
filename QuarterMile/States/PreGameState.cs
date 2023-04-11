@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using QuarterMile.Controls;
+using System;
 using System.Diagnostics;
 
 namespace QuarterMile.States
@@ -33,6 +35,7 @@ namespace QuarterMile.States
         private Texture2D ethan;
         private Texture2D bear;
         private DialogueBox dialogueBox;
+        private Song willamette;
         private int centerX;
         private int centerY;
         private bool start;
@@ -61,6 +64,14 @@ namespace QuarterMile.States
         private bool trail;
         private bool names;
         private bool otherNames;
+        private bool otherNames2;
+        private bool otherNames3;
+        private bool freshman_nrh;
+        private bool upperclassman_apex;
+        private bool mediaPlayerChecker;
+        private bool namesDone;
+        private Random random;
+        private int playerClass;
 
         // Names
         private string player1Name;
@@ -72,6 +83,9 @@ namespace QuarterMile.States
         private float nameInputTimer = 0f;
         private const float NAME_INPUT_DELAY = 0.1f; // 0.5 seconds delay before allowing input again
         private bool nameInputHappened = false;
+
+        // State
+        private QuarterMileState quarterMileState;
 
 
         public PreGameState(Game1 game, GraphicsDevice graphicsDevice, int PreferredBackBufferWidth, int PreferredBackBufferHeight, 
@@ -94,6 +108,7 @@ namespace QuarterMile.States
             ox = _content.Load<Texture2D>("Game_Assets/ox");
             ethan = _content.Load<Texture2D>("Game_Assets/ethan");
             bear = _content.Load<Texture2D>("Game_Assets/bear");
+            willamette = _content.Load<Song>("Songs/willamette_valley");
 
             ChangeMenuBackground(dialogueBackground);
 
@@ -106,6 +121,9 @@ namespace QuarterMile.States
             nameEntryMenu5 = new NameEntryMenu(_content);
             nameEntryMenu6 = new NameEntryMenu(_content);
             nameEntryMenu7 = new NameEntryMenu(_content);
+
+            // Random
+            random = new Random();
 
             // Starting variable
             start = true;
@@ -122,12 +140,20 @@ namespace QuarterMile.States
             trail = false;
             nameLetter = 0;
             otherNames = false;
+            otherNames2 = false;
+            otherNames3 = false;
+            mediaPlayerChecker = false;
+            namesDone = false;
+            player1Name = "";
+            player2Name = "";
+            player3Name = "";
+            player4Name = "";
         } // PreGame State Constructor
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, Texture2D background)
         {
             // Draw the main menu background
-            if (!names && !otherNames)
+            if (!names && !otherNames && !otherNames2 && !otherNames3 && !namesDone)
             {
                 spriteBatch.Draw(background, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
                 new Rectangle(0, 0, 1080, 2560), Color.White);
@@ -195,53 +221,35 @@ namespace QuarterMile.States
                 dialogueBox.DrawDialogueWithIcon(spriteBatch, "     Select",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 7f)), red_button);
 
-                // Draw the underline and the character
-                nameEntryMenu.DrawUnderline(spriteBatch, 
-                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 2.5f)));
-                nameEntryMenu.DrawLetter(spriteBatch, charIndex,
-                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 2.65f)));
-
-                nameEntryMenu2.DrawUnderline(spriteBatch,
-                    new Vector2(centerX - (centerX / 1.5f), centerY + (centerY / 2.5f)));
-                nameEntryMenu2.DrawLetter(spriteBatch, charIndex2,
-                    new Vector2(centerX - (centerX / 1.5f), centerY + (centerY / 2.65f)));
-
-                nameEntryMenu3.DrawUnderline(spriteBatch,
-                    new Vector2(centerX - (centerX / 2f), centerY + (centerY / 2.5f)));
-                nameEntryMenu3.DrawLetter(spriteBatch, charIndex3,
-                    new Vector2(centerX - (centerX / 2f), centerY + (centerY / 2.65f)));
-
-                nameEntryMenu4.DrawUnderline(spriteBatch,
-                    new Vector2(centerX - (centerX / 3f), centerY + (centerY / 2.5f)));
-                nameEntryMenu4.DrawLetter(spriteBatch, charIndex4,
-                    new Vector2(centerX - (centerX / 3), centerY + (centerY / 2.65f)));
-
-                nameEntryMenu5.DrawUnderline(spriteBatch,
-                    new Vector2(centerX - (centerX / 6f), centerY + (centerY / 2.5f)));
-                nameEntryMenu5.DrawLetter(spriteBatch, charIndex5,
-                    new Vector2(centerX - (centerX / 6f), centerY + (centerY / 2.65f)));
-
-                nameEntryMenu6.DrawUnderline(spriteBatch,
-                    new Vector2(centerX, centerY + (centerY / 2.5f)));
-                nameEntryMenu6.DrawLetter(spriteBatch, charIndex6,
-                    new Vector2(centerX, centerY + (centerY / 2.65f)));
-
-                nameEntryMenu7.DrawUnderline(spriteBatch,
-                    new Vector2(centerX + (centerX / 6f), centerY + (centerY / 2.5f)));
-                nameEntryMenu7.DrawLetter(spriteBatch, charIndex7,
-                    new Vector2(centerX + (centerX / 6f), centerY + (centerY / 2.65f)));
+                DrawNameSelectionScreen(spriteBatch);
 
             }
-            else if (otherNames)
+            else if (otherNames || otherNames2 || otherNames3 || namesDone)
             {
                 DrawNameScreen(spriteBatch);
 
-                dialogueBox.DrawDialogue(spriteBatch, "What are the names of \nthe other members of \nyour party?",
+                if (!namesDone)
+                {
+                    dialogueBox.DrawDialogue(spriteBatch, "What are the names of \nthe other members of \nyour party?",
                     new Vector2(centerX - (centerX / 1.2f), centerY));
+                }
+                if (namesDone)
+                {
+                    dialogueBox.DrawDialogue(spriteBatch, "These are the ones who \nwill travel the Quarter \nMile.",
+                    new Vector2(centerX - (centerX / 1.2f), centerY));
+                }
                 dialogueBox.DrawDialogueWithIcon(spriteBatch, "     Select",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 4.5f)), red_button);
                 dialogueBox.DrawDialogue(spriteBatch, "1.  " + player1Name,
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 2f)));
+                dialogueBox.DrawDialogue(spriteBatch, "2.  " + player2Name,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.55f)));
+                dialogueBox.DrawDialogue(spriteBatch, "3.  " + player3Name,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.6f)));
+                dialogueBox.DrawDialogue(spriteBatch, "4.  " + player4Name,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.65f)));
+
+                DrawNameSelectionScreen(spriteBatch);
             }
         } // Draw Method
 
@@ -292,14 +300,14 @@ namespace QuarterMile.States
                 reddown = true;
                 trail = false;
                 names = true; // name selection
-                Debug.WriteLine("fresh");
+                freshman_nrh = true;
             }
             if (!blue5down && trail)
             {
                 blue5down = true;
                 trail = false;
                 names = true; // name selection
-                Debug.WriteLine("upper");
+                upperclassman_apex = true;
             }
             // Name Input Selection
             if (names)
@@ -330,8 +338,115 @@ namespace QuarterMile.States
                         break;
                 } // switch statement
 
-            } // names if statement
+                // Play Music
+                TryToPlayWillamette();
 
+            } // names if statement
+            if (otherNames)
+            {
+                switch (nameLetter)
+                {
+                    case 0:
+                        // Check Arrow Key Input
+                        NameSelection(currentKeyboardState, gameTime, charIndex);
+                        break;
+                    case 1:
+                        NameSelection(currentKeyboardState, gameTime, charIndex2);
+                        break;
+                    case 2:
+                        NameSelection(currentKeyboardState, gameTime, charIndex3);
+                        break;
+                    case 3:
+                        NameSelection(currentKeyboardState, gameTime, charIndex4);
+                        break;
+                    case 4:
+                        NameSelection(currentKeyboardState, gameTime, charIndex5);
+                        break;
+                    case 5:
+                        NameSelection(currentKeyboardState, gameTime, charIndex6);
+                        break;
+                    case 6:
+                        NameSelection(currentKeyboardState, gameTime, charIndex7);
+                        break;
+                } // switch statement
+
+                TryToPlayWillamette();
+            }
+            if (otherNames2)
+            {
+                switch (nameLetter)
+                {
+                    case 0:
+                        // Check Arrow Key Input
+                        NameSelection(currentKeyboardState, gameTime, charIndex);
+                        break;
+                    case 1:
+                        NameSelection(currentKeyboardState, gameTime, charIndex2);
+                        break;
+                    case 2:
+                        NameSelection(currentKeyboardState, gameTime, charIndex3);
+                        break;
+                    case 3:
+                        NameSelection(currentKeyboardState, gameTime, charIndex4);
+                        break;
+                    case 4:
+                        NameSelection(currentKeyboardState, gameTime, charIndex5);
+                        break;
+                    case 5:
+                        NameSelection(currentKeyboardState, gameTime, charIndex6);
+                        break;
+                    case 6:
+                        NameSelection(currentKeyboardState, gameTime, charIndex7);
+                        break;
+                } // switch statement
+
+                TryToPlayWillamette();
+            }
+            if (otherNames3)
+            {
+                switch (nameLetter)
+                {
+                    case 0:
+                        // Check Arrow Key Input
+                        NameSelection(currentKeyboardState, gameTime, charIndex);
+                        break;
+                    case 1:
+                        NameSelection(currentKeyboardState, gameTime, charIndex2);
+                        break;
+                    case 2:
+                        NameSelection(currentKeyboardState, gameTime, charIndex3);
+                        break;
+                    case 3:
+                        NameSelection(currentKeyboardState, gameTime, charIndex4);
+                        break;
+                    case 4:
+                        NameSelection(currentKeyboardState, gameTime, charIndex5);
+                        break;
+                    case 5:
+                        NameSelection(currentKeyboardState, gameTime, charIndex6);
+                        break;
+                    case 6:
+                        NameSelection(currentKeyboardState, gameTime, charIndex7);
+                        break;
+                } // switch statement
+
+                TryToPlayWillamette();
+            }
+            // Confirming changes
+            if (namesDone && !reddown)
+            {
+                if (freshman_nrh)
+                {
+                    playerClass = 1;
+                }
+                if (upperclassman_apex)
+                {
+                    playerClass = 2;
+                }
+                quarterMileState = new(_game, _graphicsDevice, _preferredBackBufferWidth, _preferredBackBufferHeight, _content, "trail");
+                quarterMileState.InitializeData(playerClass, player1Name, player2Name, player3Name, player4Name);
+                Game1.ChangeState(quarterMileState);
+            }
 
             previousKeyboardState = currentKeyboardState;
 
@@ -457,7 +572,7 @@ namespace QuarterMile.States
                 && !nameInputHappened)
             {
                 // Check and see if that was the last letter
-                if (nameLetter >= 6)
+                if (nameLetter >= 6 && names)
                 {
                     names = false;
 
@@ -468,7 +583,7 @@ namespace QuarterMile.States
                     otherNames = true;
 
                     // Reset variables
-                    nameLetter = 0;
+                    nameLetter = -1;
                     charindex = 0;
                     charIndex = 0;
                     charIndex2 = 0;
@@ -477,15 +592,83 @@ namespace QuarterMile.States
                     charIndex5 = 0;
                     charIndex6 = 0;
                     charIndex7 = 0;
-
                 }
 
-                if (names)
+                if (nameLetter >= 6 && otherNames)
                 {
-                    // Go to the next character
+
+                    player2Name = nameEntryMenu.GetLetter() + nameEntryMenu2.GetLetter() + nameEntryMenu3.GetLetter() +
+                        nameEntryMenu4.GetLetter() + nameEntryMenu5.GetLetter() + nameEntryMenu6.GetLetter() +
+                        nameEntryMenu7.GetLetter();
+
+                    otherNames = false;
+
+                    otherNames2 = true;
+
+                    // Reset variables
+                    nameLetter = -1;
+                    charindex = 0;
+                    charIndex = 0;
+                    charIndex2 = 0;
+                    charIndex3 = 0;
+                    charIndex4 = 0;
+                    charIndex5 = 0;
+                    charIndex6 = 0;
+                    charIndex7 = 0;
+                }
+
+                if (nameLetter >= 6 && otherNames2)
+                {
+
+                    player3Name = nameEntryMenu.GetLetter() + nameEntryMenu2.GetLetter() + nameEntryMenu3.GetLetter() +
+                        nameEntryMenu4.GetLetter() + nameEntryMenu5.GetLetter() + nameEntryMenu6.GetLetter() +
+                        nameEntryMenu7.GetLetter();
+
+                    otherNames2 = false;
+
+                    otherNames3 = true;
+
+                    // Reset variables
+                    nameLetter = -1;
+                    charindex = 0;
+                    charIndex = 0;
+                    charIndex2 = 0;
+                    charIndex3 = 0;
+                    charIndex4 = 0;
+                    charIndex5 = 0;
+                    charIndex6 = 0;
+                    charIndex7 = 0;
+                }
+
+                if (nameLetter >= 6 && otherNames3)
+                {
+
+                    player4Name = nameEntryMenu.GetLetter() + nameEntryMenu2.GetLetter() + nameEntryMenu3.GetLetter() +
+                        nameEntryMenu4.GetLetter() + nameEntryMenu5.GetLetter() + nameEntryMenu6.GetLetter() +
+                        nameEntryMenu7.GetLetter();
+
+                    otherNames3 = false;
+
+                    namesDone = true;
+
+                    // Reset variables
+                    nameLetter = -1;
+                    charindex = 0;
+                    charIndex = 0;
+                    charIndex2 = 0;
+                    charIndex3 = 0;
+                    charIndex4 = 0;
+                    charIndex5 = 0;
+                    charIndex6 = 0;
+                    charIndex7 = 0;
+                }
+
+                if (names || otherNames || otherNames2 || otherNames3)
+                {
                     nameLetter++;
                     nameInputHappened = true; // Input has happened, set flag to true
                     nameInputTimer = NAME_INPUT_DELAY; // Start timer
+                    // Debug.WriteLine(nameLetter);
                 }
             }
 
@@ -553,6 +736,56 @@ namespace QuarterMile.States
                     (int)(_preferredBackBufferWidth * 0.5f), // Width of the destination rectangle
                     (int)(_preferredBackBufferHeight * 0.3f)), // Height of the destination rectangle
                     Color.White);
+        }
+
+        public void DrawNameSelectionScreen(SpriteBatch spriteBatch)
+        {
+            // Draw the underline and the character
+            nameEntryMenu.DrawUnderline(spriteBatch,
+                new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 2.5f)));
+            nameEntryMenu.DrawLetter(spriteBatch, charIndex,
+                new Vector2(centerX - (centerX / 1.2f), centerY + (centerY / 2.65f)));
+
+            nameEntryMenu2.DrawUnderline(spriteBatch,
+                new Vector2(centerX - (centerX / 1.5f), centerY + (centerY / 2.5f)));
+            nameEntryMenu2.DrawLetter(spriteBatch, charIndex2,
+                new Vector2(centerX - (centerX / 1.5f), centerY + (centerY / 2.65f)));
+
+            nameEntryMenu3.DrawUnderline(spriteBatch,
+                new Vector2(centerX - (centerX / 2f), centerY + (centerY / 2.5f)));
+            nameEntryMenu3.DrawLetter(spriteBatch, charIndex3,
+                new Vector2(centerX - (centerX / 2f), centerY + (centerY / 2.65f)));
+
+            nameEntryMenu4.DrawUnderline(spriteBatch,
+                new Vector2(centerX - (centerX / 3f), centerY + (centerY / 2.5f)));
+            nameEntryMenu4.DrawLetter(spriteBatch, charIndex4,
+                new Vector2(centerX - (centerX / 3), centerY + (centerY / 2.65f)));
+
+            nameEntryMenu5.DrawUnderline(spriteBatch,
+                new Vector2(centerX - (centerX / 6f), centerY + (centerY / 2.5f)));
+            nameEntryMenu5.DrawLetter(spriteBatch, charIndex5,
+                new Vector2(centerX - (centerX / 6f), centerY + (centerY / 2.65f)));
+
+            nameEntryMenu6.DrawUnderline(spriteBatch,
+                new Vector2(centerX, centerY + (centerY / 2.5f)));
+            nameEntryMenu6.DrawLetter(spriteBatch, charIndex6,
+                new Vector2(centerX, centerY + (centerY / 2.65f)));
+
+            nameEntryMenu7.DrawUnderline(spriteBatch,
+                new Vector2(centerX + (centerX / 6f), centerY + (centerY / 2.5f)));
+            nameEntryMenu7.DrawLetter(spriteBatch, charIndex7,
+                new Vector2(centerX + (centerX / 6f), centerY + (centerY / 2.65f)));
+        }
+
+        public void TryToPlayWillamette()
+        {
+            int num = random.Next(1, 10001); // between x and y-1
+            if (!mediaPlayerChecker && (num == 420 || num == 69))
+            {
+                MediaPlayer.Play(willamette);
+                MediaPlayer.IsRepeating = false;
+                mediaPlayerChecker = true;
+            }
         }
 
     } // public class
