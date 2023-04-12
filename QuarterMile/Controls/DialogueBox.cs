@@ -19,7 +19,7 @@ namespace QuarterMile.Controls
 #if DEBUG
             font = content.Load<SpriteFont>("Fonts/Font_Smaller");
 #else
-			font = content.Load<SpriteFont>("Fonts/Font");
+			font = content.Load<SpriteFont>("Fonts/Devcade_Big_Font");
 #endif
             #endregion
 

@@ -74,7 +74,14 @@ namespace QuarterMile.States
 
             // Load the buttons for the menu
             var buttonTexture = _content.Load<Texture2D>("Menu_Assets/button");
+
+            #region
+#if DEBUG
             var buttonFont = _content.Load<SpriteFont>("Fonts/Font");
+#else
+			var buttonFont = _content.Load<SpriteFont>("Fonts/Devcade_Big_Font");
+#endif
+            #endregion
 
             // Load the sliders for the menu
             var sliderTexture = _content.Load<Texture2D>("Menu_Assets/slider");
@@ -489,7 +496,9 @@ namespace QuarterMile.States
         public static bool DevcadeButtonCheck()
         {
             if (Input.GetButtonDown(1, Input.ArcadeButtons.StickUp) || Input.GetButtonDown(2, Input.ArcadeButtons.StickUp) 
-                || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown) || Input.GetButtonDown(2, Input.ArcadeButtons.StickDown) ||
+                || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown) || Input.GetButtonDown(2, Input.ArcadeButtons.StickDown) 
+                || Input.GetButton(1, Input.ArcadeButtons.StickLeft) || Input.GetButton(2, Input.ArcadeButtons.StickLeft) 
+                || Input.GetButton(1, Input.ArcadeButtons.StickRight) || Input.GetButton(2, Input.ArcadeButtons.StickRight) ||
                 Input.GetButtonDown(1, Input.ArcadeButtons.A1) || Input.GetButtonDown(1, Input.ArcadeButtons.A2)
                 || Input.GetButtonDown(1, Input.ArcadeButtons.A3) || Input.GetButtonDown(1, Input.ArcadeButtons.A4)
                 || Input.GetButtonDown(1, Input.ArcadeButtons.B1) || Input.GetButtonDown(1, Input.ArcadeButtons.B2)

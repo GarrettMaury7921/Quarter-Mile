@@ -47,10 +47,22 @@ namespace QuarterMile.States
         private bool greendown;
         private bool whitedown;
 
+        // Shop
+        private int skateboardPrice;
+        private int foodPrice;
+        private int clothingPrice;
+        private double studyPrice;
+        private int wheelPrice;
+        private int truckPrice;
+        private int bearPrice;
+
         // Game variables
         private bool date;
         private int semester;
         private bool info;
+        private bool shop;
+        private bool shop2;
+        private bool shop3;
 
         public QuarterMileState(Game1 game, GraphicsDevice graphicsDevice, int preferredBackBufferWidth, int preferredBackBufferHeight, ContentManager content, string state_name) : base(game, graphicsDevice, preferredBackBufferWidth, preferredBackBufferHeight, content, state_name)
         {
@@ -60,6 +72,14 @@ namespace QuarterMile.States
             name3 = "";
             name4 = "";
             dialogueBox = new DialogueBox(_content);
+
+            skateboardPrice = 0;
+            foodPrice = 0;
+            clothingPrice = 0;
+            studyPrice = 0;
+            wheelPrice = 0;
+            truckPrice = 0;
+            bearPrice = 0;
 
             // Load Assets
             red_button = _content.Load<Texture2D>("Game_Assets/red");
@@ -96,6 +116,8 @@ namespace QuarterMile.States
             }
 
             date = true;
+            reddown = true;
+            blue5down = true;
 
         }
 
@@ -155,7 +177,105 @@ namespace QuarterMile.States
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.9f)));
 
             }
-        }
+            if (shop)
+            {
+                spriteBatch.Draw(ethan, new Rectangle(
+                    (int)(centerX - (centerX / 1.2f)), // X position of the destination rectangle
+                    (int)(centerY - (centerY * 1.16f)), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.4f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogue(spriteBatch, "Hello, I'm Ethan. Current chair \nof CSH! So I see you're going \nto Academic Side. I can fix \nyou up with what you need:" +
+                    "\n\nHave you heard of weird clock? \nJust don't tell anyone how it \nworks, okay?",
+                    new Vector2(centerX - (centerX / 1.2f), centerY - (centerY / 3f)));
+                dialogueBox.DrawDialogue(spriteBatch, "- You'll need: A team of \nskateboards to carry your lazy \nbutt",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.3f)));
+                dialogueBox.DrawDialogue(spriteBatch, "- Clothing for both summer \nand winter",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.5f)));
+
+                dialogueBox.DrawDialogue(spriteBatch, "    Press RED to continue",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.9f)));
+
+            }
+            if (shop2)
+            {
+                spriteBatch.Draw(ethan, new Rectangle(
+                    (int)(centerX - (centerX / 1.2f)), // X position of the destination rectangle
+                    (int)(centerY - (centerY * 1.16f)), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.4f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogue(spriteBatch, "Hello, I'm Ethan. Current chair \nof CSH! So I see you're going \nto Academic Side. I can fix \nyou up with what you need:" +
+                    "\n\nHave you heard of weird clock? \nJust don't tell anyone how it \nworks, okay?",
+                    new Vector2(centerX - (centerX / 1.2f), centerY - (centerY / 3f)));
+                dialogueBox.DrawDialogue(spriteBatch, "- Plenty of food for the trip",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.3f)));
+                dialogueBox.DrawDialogue(spriteBatch, "- Study guides for your exams",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.5f)));
+                dialogueBox.DrawDialogue(spriteBatch, "- Spare parts for your \nskateboard",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.7f)));
+
+                dialogueBox.DrawDialogue(spriteBatch, "    Press RED to continue",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.9f)));
+
+            }
+            if (shop3)
+            {
+                spriteBatch.Draw(ethan, new Rectangle(
+                    (int)(centerX - (centerX / 1.1f)), // X position of the destination rectangle
+                    (int)(centerY - (centerY * 1.2f)), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.4f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "     Done Shopping \n (B4)",
+                    new Vector2(centerX - (centerX / 4f), centerY - (centerY / 1.1f)), dark_blue_button);
+
+                // Shop
+                int spareParts = wheelPrice + bearPrice + truckPrice;
+                double bill = skateboardPrice + foodPrice + clothingPrice + studyPrice + spareParts;
+                dialogueBox.DrawDialogue(spriteBatch, "Ethan's Corner Store, NRH.\n" +
+                    "-------------------------\n" +
+                    "1. Skateboard      $" + skateboardPrice + "\n" +
+                    "2. Food           $" + foodPrice + "\n" +
+                    "3. Clothing        $" + clothingPrice + "\n" +
+                    "4. Study Guides   $" + (int)studyPrice + "\n" +
+                    "5. Spare parts    $" + spareParts + "\n" +
+                    "-------------------------\n" +
+                    "Total Bill: $ " + (int)bill,
+                    new Vector2(centerX - (centerX / 1.2f), centerY - (centerY / 3f)));
+                if (playerClass == 1)
+                {
+                    dialogueBox.DrawDialogue(spriteBatch, "Amount you have: $" + freshman.GetMoney(),
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.25f)));
+                }
+                if (playerClass == 2)
+                {
+                    dialogueBox.DrawDialogue(spriteBatch, "Amount you have: $" + upperclassman.GetMoney(),
+                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.25f)));
+                }
+
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Anime Skateboard: $50",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.32f)), red_button);
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   RIT Food (1 lb): $20",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.42f)), blue_button);
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Clothing (1 Set): $50",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.52f)), green_button);
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Study Guide (1 Packet): $15.95",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.62f)), white_button);
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Skateboard Wheel (B1) $16",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.72f)), dark_blue_button);
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Skateboard Truck (B2) $20",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.82f)), dark_blue_button);
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Skateboard Bearings (B3) $18",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.92f)), dark_blue_button);
+
+
+            } // shop 3
+
+        } // draw
 
         public override void PostUpdate(GameTime gameTime)
         {
@@ -185,6 +305,128 @@ namespace QuarterMile.States
                     info = true;
                 }
             }
+            if (info && !reddown)
+            {
+                reddown = true;
+                info = false;
+                shop = true;
+            }
+            if (shop && !reddown)
+            {
+                reddown = true;
+                shop = false;
+                shop2 = true;
+            }
+            if (shop2 && !reddown)
+            {
+                reddown = true;
+                shop2 = false;
+
+                // Reset buttons
+                blue1down = true;
+                blue2down = true;
+                blue3down = true;
+                blue4down = true;
+                blue5down = true;
+                greendown = true;
+                whitedown = true;
+
+                shop3 = true;
+            }
+            if (shop3)
+            {
+                if (!reddown)
+                {
+                    reddown = true;
+                    skateboardPrice += 50;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 50);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 50);
+                    }
+                } // skateboard price
+                if (!blue5down)
+                {
+                    blue5down = true;
+                    foodPrice += 20;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 20);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 20);
+                    }
+                } // food price
+                if (!greendown)
+                {
+                    greendown = true;
+                    clothingPrice += 50;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 50);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 50);
+                    }
+                } // clothing price
+                if (!whitedown)
+                {
+                    whitedown = true;
+                    studyPrice += 15.95;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 15.95);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 15.95);
+                    }
+                } // study price
+                if (!blue1down)
+                {
+                    blue1down = true;
+                    wheelPrice += 16;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 16);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 16);
+                    }
+                } // wheel price
+                if (!blue2down)
+                {
+                    blue2down = true;
+                    truckPrice += 20;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 20);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 20);
+                    }
+                } // truck price
+                if (!blue3down)
+                {
+                    blue3down = true;
+                    bearPrice += 18;
+                    if (playerClass == 1)
+                    {
+                        freshman.SetMoney(freshman.GetMoney() - 18);
+                    }
+                    if (playerClass == 2)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 18);
+                    }
+                } // bearings price
+            } // shop 3
 
             previousKeyboardState = currentKeyboardState;
         }
