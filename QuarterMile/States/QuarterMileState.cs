@@ -64,6 +64,12 @@ namespace QuarterMile.States
         private bool shop2;
         private bool shop3;
 
+        // Inventory
+        Inventory inventory;
+
+        // Next Game State
+        ActualGameState nextState;
+
         public QuarterMileState(Game1 game, GraphicsDevice graphicsDevice, int preferredBackBufferWidth, int preferredBackBufferHeight, ContentManager content, string state_name) : base(game, graphicsDevice, preferredBackBufferWidth, preferredBackBufferHeight, content, state_name)
         {
             playerClass = 0;
@@ -248,12 +254,12 @@ namespace QuarterMile.States
                     new Vector2(centerX - (centerX / 1.2f), centerY - (centerY / 3f)));
                 if (playerClass == 1)
                 {
-                    dialogueBox.DrawDialogue(spriteBatch, "Amount you have: $" + freshman.GetMoney(),
+                    dialogueBox.DrawDialogue(spriteBatch, "Amount you have: $" + (int)freshman.GetMoney(),
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.25f)));
                 }
                 if (playerClass == 2)
                 {
-                    dialogueBox.DrawDialogue(spriteBatch, "Amount you have: $" + upperclassman.GetMoney(),
+                    dialogueBox.DrawDialogue(spriteBatch, "Amount you have: $" + (int)upperclassman.GetMoney(),
                      new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.25f)));
                 }
 
@@ -338,94 +344,123 @@ namespace QuarterMile.States
                 if (!reddown)
                 {
                     reddown = true;
-                    skateboardPrice += 50;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 50) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 50);
+                        skateboardPrice += 50;
                     }
-                    if (playerClass == 2)
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 50) >= 0)
                     {
                         upperclassman.SetMoney(upperclassman.GetMoney() - 50);
+                        skateboardPrice += 50;
                     }
                 } // skateboard price
                 if (!blue5down)
                 {
                     blue5down = true;
-                    foodPrice += 20;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 20) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 20);
+                        foodPrice += 20;
                     }
-                    if (playerClass == 2)
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 20) >= 0)
                     {
                         upperclassman.SetMoney(upperclassman.GetMoney() - 20);
+                        foodPrice += 20;
                     }
                 } // food price
                 if (!greendown)
                 {
                     greendown = true;
-                    clothingPrice += 50;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 50) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 50);
+                        clothingPrice += 50;
                     }
-                    if (playerClass == 2)
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 50) >= 0)
                     {
                         upperclassman.SetMoney(upperclassman.GetMoney() - 50);
+                        clothingPrice += 50;
                     }
                 } // clothing price
                 if (!whitedown)
                 {
                     whitedown = true;
-                    studyPrice += 15.95;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 15.95) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 15.95);
+                        studyPrice += 15.95;
                     }
-                    if (playerClass == 2)
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 15.95) >= 0)
                     {
                         upperclassman.SetMoney(upperclassman.GetMoney() - 15.95);
+                        studyPrice += 15.95;
                     }
                 } // study price
                 if (!blue1down)
                 {
                     blue1down = true;
-                    wheelPrice += 16;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 16) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 16);
+                        wheelPrice += 16;
                     }
-                    if (playerClass == 2)
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 16) >= 0)
                     {
                         upperclassman.SetMoney(upperclassman.GetMoney() - 16);
+                        wheelPrice += 16;
                     }
                 } // wheel price
                 if (!blue2down)
                 {
                     blue2down = true;
-                    truckPrice += 20;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 20) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 20);
+                        truckPrice += 20;
                     }
-                    if (playerClass == 2)
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 20) >= 0)
                     {
                         upperclassman.SetMoney(upperclassman.GetMoney() - 20);
+                        truckPrice += 20;
                     }
                 } // truck price
                 if (!blue3down)
                 {
                     blue3down = true;
-                    bearPrice += 18;
-                    if (playerClass == 1)
+                    if (playerClass == 1 && (freshman.GetMoney() - 18) >= 0)
                     {
                         freshman.SetMoney(freshman.GetMoney() - 18);
+                        bearPrice += 18;
+                    }
+                    if (playerClass == 2 && (upperclassman.GetMoney() - 18) >= 0)
+                    {
+                        upperclassman.SetMoney(upperclassman.GetMoney() - 18);
+                        bearPrice += 18;
+                    }
+                } // bearings price
+                if (!blue4down)
+                {
+                    blue4down = true;
+                    if (playerClass == 1)
+                    {
+                        inventory = new Inventory(freshman.GetMoney(), semester, skateboardPrice / 50, foodPrice / 20,
+                            clothingPrice / 50, studyPrice / 15.95, wheelPrice / 16, truckPrice / 20, bearPrice / 18,
+                            freshman.GetHealth(), name1, name2, name3, name4);
                     }
                     if (playerClass == 2)
                     {
-                        upperclassman.SetMoney(upperclassman.GetMoney() - 18);
+                        inventory = new Inventory(upperclassman.GetMoney(), semester, skateboardPrice / 50, foodPrice / 20,
+                            clothingPrice / 50, studyPrice / 15.95, wheelPrice / 16, truckPrice / 20, bearPrice / 18,
+                            upperclassman.GetHealth(), name1, name2, name3, name4);
                     }
-                } // bearings price
+
+                    shop3 = false;
+                    nextState = new ActualGameState(_game, _graphicsDevice, _preferredBackBufferWidth, _preferredBackBufferHeight, 
+                        _content, "TrailState", inventory);
+                    Game1.ChangeState(nextState); // Change State
+
+                }
             } // shop 3
 
             previousKeyboardState = currentKeyboardState;

@@ -40,6 +40,11 @@ namespace QuarterMile.Characters
             return money;
         }
 
+        public double GetHealth()
+        {
+            return health;
+        }
+
         public Apex_Upperclassman()
         {
             money = 1500;

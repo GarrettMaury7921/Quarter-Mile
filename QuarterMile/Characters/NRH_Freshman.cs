@@ -42,6 +42,11 @@ namespace QuarterMile.Characters
             return money;
         }
 
+        public double GetHealth()
+        {
+            return health;
+        }
+
         public NRH_Freshman() {
 
             money = 500;
