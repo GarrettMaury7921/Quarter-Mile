@@ -457,7 +457,7 @@ namespace QuarterMile.States
 
                     shop3 = false;
                     nextState = new ActualGameState(_game, _graphicsDevice, _preferredBackBufferWidth, _preferredBackBufferHeight, 
-                        _content, "TrailState", inventory);
+                        _content, "TrailState", inventory, freshman, upperclassman);
                     Game1.ChangeState(nextState); // Change State
 
                 }

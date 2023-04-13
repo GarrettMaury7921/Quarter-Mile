@@ -33,6 +33,11 @@ namespace QuarterMile.Controls
             spriteBatch.DrawString(font, text, position, Color.White);
         }
 
+        public void DrawDialogueBlack(SpriteBatch spriteBatch, string text, Vector2 position)
+        {
+            spriteBatch.DrawString(font, text, position, Color.Black);
+        }
+
         public void DrawDialogueWithIcon(SpriteBatch spriteBatch, string text, Vector2 position, Texture2D icon)
         {
             // Draw the icon

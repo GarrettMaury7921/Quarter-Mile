@@ -108,6 +108,18 @@
 /processorParam:TextureFormat=Color
 /build:Game_Assets/green.png
 
+#begin Game_Assets/nrh.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Game_Assets/nrh.png
+
 #begin Game_Assets/ox.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -155,6 +167,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Game_Assets/skateboard.png
+
+#begin Game_Assets/trail_background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Game_Assets/trail_background.png
 
 #begin Game_Assets/white.png
 /importer:TextureImporter
@@ -251,6 +275,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Menu_Assets/slider.png
+
+#begin Songs/the_dalles.wav
+/importer:WavImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Songs/the_dalles.wav
 
 #begin Songs/title.wav
 /importer:WavImporter
