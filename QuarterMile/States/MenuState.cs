@@ -96,33 +96,30 @@ namespace QuarterMile.States
             MediaPlayer.Play(title_music);
             MediaPlayer.IsRepeating = true;
 
-            // ***** ALL STARTING BUTTONS ARE DEFINED BELOW *****
-            // These are all the things that the user can select in the menu
-            // Each button has an on-click event
             var travelButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.32f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.17f)), (int)(centerY + (PreferredBackBufferHeight * 0.22f))),
                 Text = "      Travel",
             };
             travelButton.Click += TravelButton_Click;
 
             var settingsButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.39f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.17f)), (int)(centerY + (PreferredBackBufferHeight * 0.29f))),
                 Text = "      Settings",
             };
             settingsButton.Click += SettingsButton_Click;
 
             var quitGameButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.46f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.17f)), (int)(centerY + (PreferredBackBufferHeight * 0.36f))),
                 Text = "      Quit",
             };
             quitGameButton.Click += QuitGameButton_Click;
 
             var BackButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.46f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.17f)), (int)(centerY + (PreferredBackBufferHeight * 0.36f))),
                 Text = "     Back",
             };
             BackButton.Click += BackButton_Click;
@@ -131,7 +128,7 @@ namespace QuarterMile.States
             // MUSIC VOLUME SLIDER
             var MusicVolumeSliderButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.34f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.17f)), (int)(centerY + (PreferredBackBufferHeight * 0.24f))),
                 // Setting the text to the correct place above the slider
                 textOffset = new Vector2(40, -40),
                 Text = "Music",
@@ -139,14 +136,14 @@ namespace QuarterMile.States
             MusicVolumeSliderButton.Click += MusicVolumeSliderButton_Click;
             var MusicVolumeSlider = new Slider(sliderTexture, sliderThumbTexture, musicType)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.44f)), (int)(centerY + (PreferredBackBufferHeight * 0.365f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.34f)), (int)(centerY + (PreferredBackBufferHeight * 0.265f))),
                 BarColor = Color.White,
             };
 
             // SOUND EFFECT SLIDER
             var EffectVolumeSliderButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.27f)), (int)(centerY + (PreferredBackBufferHeight * 0.41f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.17f)), (int)(centerY + (PreferredBackBufferHeight * 0.31f))),
                 // Setting the text to the correct place above the slider
                 textOffset = new Vector2(44, -40),
                 Text = "Sound Effects",
@@ -154,10 +151,69 @@ namespace QuarterMile.States
             EffectVolumeSliderButton.Click += EffectVolumeSliderButton_Click;
             var EffectVolumeSlider = new Slider(sliderTexture, sliderThumbTexture, soundEffectType)
             {
-                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.44f)), (int)(centerY + (PreferredBackBufferHeight * 0.435f))),
+                Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.34f)), (int)(centerY + (PreferredBackBufferHeight * 0.335f))),
                 BarColor = Color.White,
             };
 
+            if (_preferredBackBufferWidth > 1000) // prod
+            {
+                travelButton = new Button(buttonTexture, buttonFont)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.07f)), (int)(centerY + (PreferredBackBufferHeight * 0.22f))),
+                    Text = "      Travel",
+                };
+                travelButton.Click += TravelButton_Click;
+
+                settingsButton = new Button(buttonTexture, buttonFont)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.07f)), (int)(centerY + (PreferredBackBufferHeight * 0.26f))),
+                    Text = "      Settings",
+                };
+                settingsButton.Click += SettingsButton_Click;
+
+                quitGameButton = new Button(buttonTexture, buttonFont)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.07f)), (int)(centerY + (PreferredBackBufferHeight * 0.32f))),
+                    Text = "      Quit",
+                };
+                quitGameButton.Click += QuitGameButton_Click;
+
+                BackButton = new Button(buttonTexture, buttonFont)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.07f)), (int)(centerY + (PreferredBackBufferHeight * 0.36f))),
+                    Text = "     Back",
+                };
+                BackButton.Click += BackButton_Click;
+
+                MusicVolumeSliderButton = new Button(buttonTexture, buttonFont)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.07f)), (int)(centerY + (PreferredBackBufferHeight * 0.24f))),
+                    // Setting the text to the correct place above the slider
+                    textOffset = new Vector2(40, -40),
+                    Text = "Music",
+                };
+                MusicVolumeSliderButton.Click += MusicVolumeSliderButton_Click;
+                MusicVolumeSlider = new Slider(sliderTexture, sliderThumbTexture, musicType)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.24f)), (int)(centerY + (PreferredBackBufferHeight * 0.265f))),
+                    BarColor = Color.White,
+                };
+
+                // SOUND EFFECT SLIDER
+                EffectVolumeSliderButton = new Button(buttonTexture, buttonFont)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.07f)), (int)(centerY + (PreferredBackBufferHeight * 0.31f))),
+                    // Setting the text to the correct place above the slider
+                    textOffset = new Vector2(44, -40),
+                    Text = "Sound Effects",
+                };
+                EffectVolumeSliderButton.Click += EffectVolumeSliderButton_Click;
+                EffectVolumeSlider = new Slider(sliderTexture, sliderThumbTexture, soundEffectType)
+                {
+                    Position = new Vector2((int)(centerX + (PreferredBackBufferWidth * 0.24f)), (int)(centerY + (PreferredBackBufferHeight * 0.335f))),
+                    BarColor = Color.White,
+                };
+            }
 
             // ***** TYPES OF COMPONENTS *****
             // Change to these components to change the menu

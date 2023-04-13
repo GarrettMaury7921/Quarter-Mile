@@ -18,14 +18,14 @@ namespace QuarterMile.Controls
             #region
 #if DEBUG
             font = content.Load<SpriteFont>("Fonts/Font_Smaller");
-#else
-			font = content.Load<SpriteFont>("Fonts/Devcade_Big_Font");
-#endif
-            #endregion
-
-            // Attributes
             iconWidth = 32;
             iconHeight = 32;
+#else
+			font = content.Load<SpriteFont>("Fonts/Devcade_Big_Font");
+            iconWidth = 96;
+            iconHeight = 96;
+#endif
+            #endregion
         }
 
         public void DrawDialogue(SpriteBatch spriteBatch, string text, Vector2 position)

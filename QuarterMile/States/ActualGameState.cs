@@ -6,8 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using QuarterMile.Characters;
 using QuarterMile.Controls;
-using System;
-using System.Diagnostics;
 
 namespace QuarterMile.States
 {
@@ -36,6 +34,9 @@ namespace QuarterMile.States
         private Texture2D ox;
         private Texture2D ethan;
         private Texture2D bear;
+        private Texture2D player;
+        private Texture2D brick_wall;
+        private Texture2D gol;
 
         // Button variables
         private bool blue1down;
@@ -62,9 +63,13 @@ namespace QuarterMile.States
         {
 
             // LOAD ASSETS
-            gameBackground = _content.Load<Texture2D>("Game_Assets/trail_Background");
+            gameBackground = _content.Load<Texture2D>("Game_Assets/trail_background");
             nrhbackground = _content.Load<Texture2D>("Game_Assets/nrh");
             the_dalles = _content.Load<Song>("Songs/the_dalles");
+            player = _content.Load<Texture2D>("Game_Assets/player");
+            brick_wall = _content.Load<Texture2D>("Game_Assets/brick_game_background");
+            gol = _content.Load<Texture2D>("Game_Assets/golisano");
+
             // Load Assets
             red_button = _content.Load<Texture2D>("Game_Assets/red");
             blue_button = _content.Load<Texture2D>("Game_Assets/blue");
@@ -149,9 +154,9 @@ namespace QuarterMile.States
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.1f)));
                 dialogueBox.DrawDialogueWithIcon(spriteBatch, "     1. Continue on trail",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.2f)), red_button);
-                dialogueBox.DrawDialogueWithIcon(spriteBatch, "     2. Up the pace",
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "     2. Lower the pace",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.3f)), blue_button);
-                dialogueBox.DrawDialogueWithIcon(spriteBatch, "     3. Lower the pace",
+                dialogueBox.DrawDialogueWithIcon(spriteBatch, "     3. Up the pace",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)), green_button);
                 dialogueBox.DrawDialogueWithIcon(spriteBatch, "     4. Up the rations",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.5f)), white_button);
@@ -168,11 +173,40 @@ namespace QuarterMile.States
                 spriteBatch.Draw(gameBackground, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
                 new Rectangle(0, 0, 1080, 2560), Color.White);
 
+                spriteBatch.Draw(brick_wall, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
+                new Rectangle(0, 0, 1080, 2560), Color.White);
+
+                spriteBatch.Draw(gol, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
+                new Rectangle(0, 0, 1080, 2560), Color.White);
+
+                spriteBatch.Draw(player, new Rectangle(
+                    (int)(centerX + (centerX * 0.5)), // X position of the destination rectangle
+                    (int)(centerY - (centerY * 0.55f)), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.2f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.2f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogueBlack(spriteBatch, ""
+                    + _inventory.month
+                    + " "
+                    + _inventory.day
+                    + ", "
+                    + _inventory.year,
+                    new Vector2(centerX - (centerX / 2.5f), centerY + (centerY * 0f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Weather: " + _inventory.weather,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.1f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Health: " + _inventory.ReportHealth(),
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.2f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Pace: " + _inventory.pace,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.3f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Rations: " + _inventory.rations,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
+
                 dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Size up the situation",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.9f)), blue_button);
-            }
+            } // in game
 
-        }
+        } // draw
 
         public override void PostUpdate(GameTime gameTime)
         {
@@ -203,11 +237,32 @@ namespace QuarterMile.States
                 menu = false;
                 inGame = true;
             }
+            if (menu && !blue5down)
+            {
+                blue5down = true;
+                _inventory.ChangePace(1);
+            }
+            if (menu && !greendown)
+            {
+                greendown = true;
+                _inventory.ChangePace(-1);
+            }
+            if (menu && !whitedown)
+            {
+                whitedown = true;
+                _inventory.ChangeRations(1);
+            }
+            if (menu && !blue1down)
+            {
+                blue1down = true;
+                _inventory.ChangeRations(-1);
+            }
             if (inGame)
             {
                 if (!blue5down)
                 {
                     greendown = true;
+                    blue5down = true;
                     inGame = false;
                     menu = true;
                 }
