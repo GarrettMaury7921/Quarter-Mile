@@ -51,7 +51,7 @@ namespace QuarterMile.Controls
         {
             _texture = texture;
             _font = font;
-            PenColour = Color.Black;
+            PenColour = Color.White;
         }
 
         public void EnterButtonHit()

@@ -68,7 +68,7 @@ namespace QuarterMile.Controls
         #region Methods
         public Slider(Texture2D texture, Texture2D thumbTexture, string type)
         {
-            PenColour = Color.Black;
+            PenColour = Color.White;
             _texture = texture;
             _thumbTexture = thumbTexture;
             Value = MediaPlayer.Volume;

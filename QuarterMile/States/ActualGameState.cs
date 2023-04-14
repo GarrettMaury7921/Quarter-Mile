@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using QuarterMile.Characters;
 using QuarterMile.Controls;
+using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace QuarterMile.States
 {
@@ -54,6 +57,13 @@ namespace QuarterMile.States
         private int playerClass;
         private bool menu;
         private bool mediaChecker;
+        public static bool statusMessage;
+        private bool letter;
+        private bool win;
+
+        // Timer
+        private Timer timer;
+        private double offset;
 
 
         public ActualGameState(Game1 game, GraphicsDevice graphicsDevice, int preferredBackBufferWidth, 
@@ -80,9 +90,10 @@ namespace QuarterMile.States
             dialogueBackground = _content.Load<Texture2D>("Menu_Assets/Dialogue_Background");
             ethan = _content.Load<Texture2D>("Game_Assets/ethan");
 
+
             // Attributes
             blue1down = false;
-            blue2down = false;
+            blue2down = true;
             blue3down = false;
             blue4down = false;
             greendown = false;
@@ -91,6 +102,9 @@ namespace QuarterMile.States
             blue5down = false;
             menu = false;
             mediaChecker = true;
+            statusMessage = false;
+            letter = false;
+            win = false;
             _inventory = inventory;
             _freshman = freshman;
             _upperclassman = upperclassman;
@@ -112,6 +126,10 @@ namespace QuarterMile.States
                 playerClass = 2;
                 //Debug.WriteLine("upper not null");
             }
+
+            // Timer
+            timer = new Timer(TimerCallback, null, 0, 5000);
+
         } // Actual Game State Constructor
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch, Texture2D main_menu)
@@ -176,7 +194,7 @@ namespace QuarterMile.States
                 spriteBatch.Draw(brick_wall, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
                 new Rectangle(0, 0, 1080, 2560), Color.White);
 
-                spriteBatch.Draw(gol, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
+                spriteBatch.Draw(gol, new Rectangle((int)offset, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
                 new Rectangle(0, 0, 1080, 2560), Color.White);
 
                 spriteBatch.Draw(player, new Rectangle(
@@ -192,7 +210,7 @@ namespace QuarterMile.States
                     + _inventory.day
                     + ", "
                     + _inventory.year,
-                    new Vector2(centerX - (centerX / 2.5f), centerY + (centerY * 0f)));
+                    new Vector2(centerX - (centerX / 2f), centerY + (centerY * 0f)));
                 dialogueBox.DrawDialogueBlack(spriteBatch, "Weather: " + _inventory.weather,
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.1f)));
                 dialogueBox.DrawDialogueBlack(spriteBatch, "Health: " + _inventory.ReportHealth(),
@@ -205,6 +223,60 @@ namespace QuarterMile.States
                 dialogueBox.DrawDialogueWithIcon(spriteBatch, "   Size up the situation",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.9f)), blue_button);
             } // in game
+
+            if (statusMessage)
+            {
+                spriteBatch.Draw(gameBackground, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
+                new Rectangle(0, 0, 1080, 2560), Color.White);
+
+                spriteBatch.Draw(brick_wall, new Rectangle(0, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
+                new Rectangle(0, 0, 1080, 2560), Color.White);
+
+                spriteBatch.Draw(gol, new Rectangle((int)offset, 0, _preferredBackBufferWidth, _preferredBackBufferHeight),
+                new Rectangle(0, 0, 1080, 2560), Color.White);
+
+                spriteBatch.Draw(player, new Rectangle(
+                    (int)(centerX + (centerX * 0.5)), // X position of the destination rectangle
+                    (int)(centerY - (centerY * 0.55f)), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.2f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.2f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogueBlack(spriteBatch, _inventory.status,
+            new Vector2(centerX - (centerX / 1.1f), centerY - (centerY * 0.2f)));
+                
+                dialogueBox.DrawDialogueBlack(spriteBatch, ""
+                    + _inventory.month
+                    + " "
+                    + _inventory.day
+                    + ", "
+                    + _inventory.year,
+                    new Vector2(centerX - (centerX / 2f), centerY + (centerY * 0f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Weather: " + _inventory.weather,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.1f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Health: " + _inventory.ReportHealth(),
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.2f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Pace: " + _inventory.pace,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.3f)));
+                dialogueBox.DrawDialogueBlack(spriteBatch, "Rations: " + _inventory.rations,
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
+
+                dialogueBox.DrawDialogue(spriteBatch, "    Press RED to continue",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.9f)));
+            }
+            if (win)
+            {
+                spriteBatch.Draw(player, new Rectangle(
+                    (int)(centerX), // X position of the destination rectangle
+                    (int)(centerY), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.5f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogue
+                    (spriteBatch, "YOU FREAKIN WIN!",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
+            }
 
         } // draw
 
@@ -257,8 +329,35 @@ namespace QuarterMile.States
                 blue1down = true;
                 _inventory.ChangeRations(-1);
             }
+            if (menu && !blue2down)
+            {
+                blue2down = true;
+                _inventory.Rest();
+            }
             if (inGame)
             {
+                if (_inventory.status != null)
+                {
+                    // Check for status message
+                    foreach (char c in _inventory.status)
+                    {
+                        if (char.IsLetter(c))
+                        {
+                            letter = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (letter)
+                {
+                    statusMessage = true;
+                    inGame = false;
+                }
+
+                offset += 0.02;
+                // Debug.WriteLine(offset);
+
                 if (!blue5down)
                 {
                     greendown = true;
@@ -266,6 +365,41 @@ namespace QuarterMile.States
                     inGame = false;
                     menu = true;
                 }
+            } // inGame
+
+            if (statusMessage)
+            {
+                if (!reddown)
+                {
+                    reddown = true;
+                    letter = false;
+                    _inventory.clearStatusMessage();
+                    statusMessage = false;
+                    inGame = true;
+                }
+            }
+
+
+            if (menu || inGame || statusMessage)
+            {
+                _inventory.UpdateMonthAndDay(ref _inventory.month, ref _inventory.day, _inventory.year);
+                _inventory.checkStats();
+            }
+
+            // Go through days
+            if (offset % 10 == 0 && inGame)
+            {
+                _inventory.day++;
+            }
+
+            // winning
+            if (offset > 270)
+            {
+                // YOU WIN
+                win = true;
+                menu = false;
+                inGame = false;
+                statusMessage = false;
             }
 
             previousKeyboardState = currentKeyboardState;
@@ -363,6 +497,14 @@ namespace QuarterMile.States
             }
         } // CheckButtons Method
 
+        // Timer, called every x value
+        private void TimerCallback(object state)
+        {
+            if (inGame)
+            {
+                _inventory.NextEvent();
+            }
+        } // timer call back
 
     }
 }
