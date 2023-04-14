@@ -60,6 +60,7 @@ namespace QuarterMile.States
         public static bool statusMessage;
         private bool letter;
         private bool win;
+        private bool lose;
 
         // Timer
         private Timer timer;
@@ -277,6 +278,19 @@ namespace QuarterMile.States
                     (spriteBatch, "YOU FREAKIN WIN!",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
             }
+            if (lose)
+            {
+                spriteBatch.Draw(bear, new Rectangle(
+                    (int)(centerX), // X position of the destination rectangle
+                    (int)(centerY), // Y position of the destination rectangle
+                    (int)(_preferredBackBufferWidth * 0.5f), // Width of the destination rectangle
+                    (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
+                    Color.White);
+
+                dialogueBox.DrawDialogue
+                    (spriteBatch, "YOU LOST....",
+                    new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
+            }
 
         } // draw
 
@@ -355,8 +369,15 @@ namespace QuarterMile.States
                     inGame = false;
                 }
 
+                #region
+#if DEBUG
                 offset += 0.02;
-                // Debug.WriteLine(offset);
+#else
+                offset += 0.06;
+#endif
+                #endregion
+                
+                //Debug.WriteLine(offset);
 
                 if (!blue5down)
                 {
@@ -366,6 +387,15 @@ namespace QuarterMile.States
                     menu = true;
                 }
             } // inGame
+
+            // See if the player loses
+            if (inGame && !_inventory.checkStats())
+            {
+                lose = true;
+                statusMessage = false;
+                letter = false;
+                inGame = false;
+            }
 
             if (statusMessage)
             {
@@ -393,6 +423,8 @@ namespace QuarterMile.States
             }
 
             // winning
+            #region
+#if DEBUG
             if (offset > 270)
             {
                 // YOU WIN
@@ -401,6 +433,18 @@ namespace QuarterMile.States
                 inGame = false;
                 statusMessage = false;
             }
+#else
+            if (offset > 980)
+            {
+                // YOU WIN
+                win = true;
+                menu = false;
+                inGame = false;
+                statusMessage = false;
+            }
+#endif
+            #endregion
+
 
             previousKeyboardState = currentKeyboardState;
         }

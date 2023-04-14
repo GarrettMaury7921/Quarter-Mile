@@ -473,16 +473,16 @@ namespace QuarterMile.Characters
                             switch (y)
                             {
                                 case 1:
-                                    setStatusMessage(_name1 + "Has dysentery.");
+                                    setStatusMessage(_name1 + " Has dysentery.");
                                     break;
                                 case 2:
-                                    setStatusMessage(_name2 + "Has dysentery.");
+                                    setStatusMessage(_name2 + " Has dysentery.");
                                     break;
                                 case 3:
-                                    setStatusMessage(_name3 + "Has dysentery.");
+                                    setStatusMessage(_name3 + " Has dysentery.");
                                     break;
                                 case 4:
-                                    setStatusMessage(_name4 + "Has dysentery.");
+                                    setStatusMessage(_name4 + " Has dysentery.");
                                     break;
                             }
                             break;
