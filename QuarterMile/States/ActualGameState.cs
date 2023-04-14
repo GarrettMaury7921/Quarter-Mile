@@ -90,6 +90,7 @@ namespace QuarterMile.States
             yellow_button = _content.Load<Texture2D>("Game_Assets/yellow");
             dialogueBackground = _content.Load<Texture2D>("Menu_Assets/Dialogue_Background");
             ethan = _content.Load<Texture2D>("Game_Assets/ethan");
+            bear = _content.Load<Texture2D>("Game_Assets/bear");
 
 
             // Attributes
@@ -434,7 +435,7 @@ namespace QuarterMile.States
                 statusMessage = false;
             }
 #else
-            if (offset > 980)
+            if (offset > 880)
             {
                 // YOU WIN
                 win = true;

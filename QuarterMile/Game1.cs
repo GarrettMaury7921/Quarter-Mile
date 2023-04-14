@@ -126,9 +126,9 @@ namespace QuarterMile
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.Black);
-			
-			// Batches all the draw calls for this frame, and then performs them all at once
-			_spriteBatch.Begin();
+
+            // Batches all the draw calls for this frame, and then performs them all at once
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, null, null);
 
             // Draw the menu items and each state
             _currentState.Draw(gameTime, _spriteBatch, main_menu);
