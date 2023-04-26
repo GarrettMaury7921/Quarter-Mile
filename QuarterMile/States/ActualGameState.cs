@@ -8,6 +8,7 @@ using QuarterMile.Characters;
 using QuarterMile.Controls;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Threading;
 
 namespace QuarterMile.States
@@ -65,7 +66,7 @@ namespace QuarterMile.States
         // Timer
         private Timer timer;
         private double offset;
-
+        private int counter;
 
         public ActualGameState(Game1 game, GraphicsDevice graphicsDevice, int preferredBackBufferWidth, 
             int preferredBackBufferHeight, ContentManager content, string state_name, Inventory inventory,
@@ -110,6 +111,7 @@ namespace QuarterMile.States
             _inventory = inventory;
             _freshman = freshman;
             _upperclassman = upperclassman;
+            counter = 0;
 
             centerX = (_preferredBackBufferWidth) / 2;
             centerY = (_preferredBackBufferHeight) / 2;
@@ -276,7 +278,7 @@ namespace QuarterMile.States
                     Color.White);
 
                 dialogueBox.DrawDialogue
-                    (spriteBatch, "YOU FREAKIN WIN!",
+                    (spriteBatch, "YOU FREAKIN WIN!\n Press Red.",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
             }
             if (lose)
@@ -289,7 +291,7 @@ namespace QuarterMile.States
                     Color.White);
 
                 dialogueBox.DrawDialogue
-                    (spriteBatch, "YOU LOST....",
+                    (spriteBatch, "YOU LOST....\n Press Red.",
                     new Vector2(centerX - (centerX / 1.2f), centerY + (centerY * 0.4f)));
             }
 
@@ -445,6 +447,19 @@ namespace QuarterMile.States
             }
 #endif
             #endregion
+
+            if ((win || lose) && counter == 0)
+            {
+                reddown = false;
+                counter++;
+            }
+
+            if((win && reddown) || (lose && reddown))
+            {
+                MenuState menuState = new(_game, _graphicsDevice, _preferredBackBufferWidth, _preferredBackBufferHeight,
+                        _content, "MenuState");
+                Game1.ChangeState(menuState);
+            }
 
 
             previousKeyboardState = currentKeyboardState;
