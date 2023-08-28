@@ -192,7 +192,7 @@ namespace QuarterMile.States
                     (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
                     Color.White);
 
-                dialogueBox.DrawDialogue(spriteBatch, "Hello, I'm Ethan. Current chair \nof CSH! So I see you're going \nto Academic Side. I can fix \nyou up with what you need:" +
+                dialogueBox.DrawDialogue(spriteBatch, "Hello, I'm Ethan. Current chair \nof CSH! (RIP) So I see you're \ngoing to Academic Side. I can fix \nyou up with what you need:" +
                     "\n\nHave you heard of weird clock? \nJust don't tell anyone how it \nworks, okay?",
                     new Vector2(centerX - (centerX / 1.2f), centerY - (centerY / 3f)));
                 dialogueBox.DrawDialogue(spriteBatch, "- You'll need: A team of \nskateboards to carry your lazy \nbutt",
@@ -213,7 +213,7 @@ namespace QuarterMile.States
                     (int)(_preferredBackBufferHeight * 0.5f)), // Height of the destination rectangle
                     Color.White);
 
-                dialogueBox.DrawDialogue(spriteBatch, "Hello, I'm Ethan. Current chair \nof CSH! So I see you're going \nto Academic Side. I can fix \nyou up with what you need:" +
+                dialogueBox.DrawDialogue(spriteBatch, "Hello, I'm Ethan. Current chair \nof CSH! (RIP) So I see you're \ngoing to Academic Side. I can fix \nyou up with what you need:" +
                     "\n\nHave you heard of weird clock? \nJust don't tell anyone how it \nworks, okay?",
                     new Vector2(centerX - (centerX / 1.2f), centerY - (centerY / 3f)));
                 dialogueBox.DrawDialogue(spriteBatch, "- Plenty of food for the trip",

@@ -390,18 +390,27 @@ namespace QuarterMile.Characters
         public void NextEvent()
         {
             Random rand = new();
-            int randomNum = rand.Next(1, 11); // x, y-1
+            int randomNum = rand.Next(1, 12); // x, y-1
             switch (randomNum)
             {
                 // Catalytic Converter Thefts
                 case 1:
                     setStatusMessage("Crime Alert - Catalytic Converter \nTheft from a Vehicle Parked \nin K Lot");
                     ActualGameState.statusMessage = true;
+
+                    Random rand1 = new();
+                    int randomNum1 = rand1.Next(1, 4); // x, y-1
+                    if (randomNum1 == 3 && _money >= 100)
+                    {
+                        _money -= 100;
+                        setStatusMessage("Your car was vandalized!");
+                        ActualGameState.statusMessage = true;
+                    }
                     break;
                 // Roll for dysentery
                 case 2:
                     Random rand2 = new();
-                    int randomNum2 = rand.Next(1, 4); // x, y-1
+                    int randomNum2 = rand2.Next(1, 4); // x, y-1
                     switch (randomNum2)
                     {
                         // Win
@@ -416,7 +425,7 @@ namespace QuarterMile.Characters
                                 if (!_name1_dys || !_name2_dys || !_name3_dys || !_name4_dys)
                                 {
                                     Random rand3 = new();
-                                    int randomNum3 = rand.Next(1, 5); // x, y-1
+                                    int randomNum3 = rand3.Next(1, 5); // x, y-1
                                     switch (randomNum3)
                                     {
                                         case 1:
@@ -494,9 +503,9 @@ namespace QuarterMile.Characters
                             {
                                 if (!_name1_dys || !_name2_dys || !_name3_dys || !_name4_dys)
                                 {
-                                    Random rand3 = new();
-                                    int randomNum3 = rand.Next(1, 5); // x, y-1
-                                    switch (randomNum3)
+                                    Random rand4 = new();
+                                    int randomNum4 = rand4.Next(1, 5); // x, y-1
+                                    switch (randomNum4)
                                     {
                                         case 1:
                                             if (_name1_dys)
@@ -596,8 +605,29 @@ namespace QuarterMile.Characters
                 case 5:
                     setStatusMessage("RIT Bear Incident.");
                     ActualGameState.statusMessage = true;
-                    _health -= 20;
+
+                    Random rand5 = new();
+                    int randomNum5 = rand5.Next(10, 31); // x, y-1
+
+                    _health -= randomNum5;
                     break;
+                // Pole sit
+                case 6:
+                    if (_money - 20 >= 0)
+                    {
+                        setStatusMessage("You donated to polesit!");
+                        ActualGameState.statusMessage = true;
+                        _money -= 20;
+                    }
+                    else
+                    {
+                        setStatusMessage("You had no money to donate to polesit...so you donated a limb!");
+                        ActualGameState.statusMessage = true;
+                        _health -= 30;
+                    }
+                    break;
+
+                // Default
                 default:
                     break;
             } // switch
